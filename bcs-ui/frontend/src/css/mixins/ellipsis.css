@@ -1,0 +1,26 @@
+
+
+/**
+ * @file mixin ellipsis
+ *
+ * usage:
+ *      @mixin ellipsis 100px;
+ */
+
+@define-mixin ellipsis $maxWidth, $display: inline-block {
+    display: $display;
+    max-width: $maxWidth;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@define-mixin bcs-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}

@@ -1,0 +1,5 @@
+bcs-cluster-resources
+etc/*dev*
+.codecc
+.idea
+.vscode

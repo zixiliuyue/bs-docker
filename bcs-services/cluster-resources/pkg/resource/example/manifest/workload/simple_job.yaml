@@ -1,0 +1,22 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-test
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl
+        command: ["echo", "hello"]
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+      restartPolicy: Never
+  backoffLimit: 4

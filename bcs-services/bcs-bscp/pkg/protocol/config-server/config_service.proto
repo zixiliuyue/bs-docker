@@ -1,0 +1,1174 @@
+syntax = "proto3";
+
+import "bscp.io/pkg/protocol/core/base/base.proto";
+import "bscp.io/pkg/protocol/core/app/app.proto";
+import "bscp.io/pkg/protocol/core/config-item/config_item.proto";
+import "bscp.io/pkg/protocol/core/content/content.proto";
+import "bscp.io/pkg/protocol/core/group/group.proto";
+import "bscp.io/pkg/protocol/core/credential/credential.proto";
+import "bscp.io/pkg/protocol/core/credential-scope/credential-scope.proto";
+import "bscp.io/pkg/protocol/core/hook/hook.proto";
+import "bscp.io/pkg/protocol/core/hook-revision/hook_revision.proto";
+import "bscp.io/pkg/protocol/core/release/release.proto";
+import "bscp.io/pkg/protocol/core/template/template.proto";
+import "bscp.io/pkg/protocol/core/template-release/template_release.proto";
+import "bscp.io/pkg/protocol/core/template-set/template_set.proto";
+import "bscp.io/pkg/protocol/core/template-space/template_space.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+
+package pbcs;
+
+option go_package = "bscp.io/pkg/protocol/config-server;pbcs";
+
+service Config {
+    rpc CreateApp(CreateAppReq) returns (CreateAppResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/create/app/app/biz_id/{biz_id}"
+            body : "*"
+        };
+    }
+    rpc UpdateApp(UpdateAppReq) returns (UpdateAppResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/update/app/app/app_id/{id}/biz_id/{biz_id}"
+            body : "*"
+        };
+    }
+    rpc DeleteApp(DeleteAppReq) returns (DeleteAppResp) {
+        option (google.api.http) = {
+            delete : "/api/v1/config/delete/app/app/app_id/{id}/biz_id/{biz_id}"
+        };
+    }
+    rpc GetApp(GetAppReq) returns (pbapp.App) {
+        option (google.api.http) = {
+            get : "/api/v1/config/get/app/app/app_id/{app_id}/biz_id/{biz_id}"
+        };
+    }
+    rpc GetAppByName(GetAppByNameReq) returns (pbapp.App) {
+        option (google.api.http) = {
+            get: "/api/v1/config/biz/{biz_id}/apps/query/name/{app_name}"
+        };
+    }
+
+    // 获取用户有权限的 spaces 所有的 apps
+    rpc ListAppsRest(ListAppsRestReq) returns (ListAppsResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/apps"
+        };
+    }
+    // 按 space 查询 app 信息
+    rpc ListAppsBySpaceRest(ListAppsBySpaceRestReq) returns (ListAppsResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/list/app/app/biz_id/{biz_id}"
+        };
+    }
+
+    rpc CreateConfigItem(CreateConfigItemReq) returns (CreateConfigItemResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/create/config_item/config_item/app_id/{app_id}/biz_id/{biz_id}"
+            body : "*"
+        };
+    }
+    rpc BatchUpsertConfigItems(BatchUpsertConfigItemsReq) returns (BatchUpsertConfigItemsResp) {
+        option (google.api.http) = {
+            put: "/api/v1/config/biz/{biz_id}/apps/{app_id}/config_items"
+            body: "*"
+        };
+    }
+    rpc UpdateConfigItem(UpdateConfigItemReq) returns (UpdateConfigItemResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/update/config_item/config_item/config_item_id/{id}/app_id/{app_id}/biz_id/{biz_id}"
+            body : "*"
+        };
+    }
+    rpc DeleteConfigItem(DeleteConfigItemReq) returns (DeleteConfigItemResp) {
+        option (google.api.http) = {
+            delete : "/api/v1/config/delete/config_item/config_item/config_item_id/{id}/app_id/{app_id}/biz_id/{biz_id}"
+        };
+    }
+    rpc GetConfigItem(GetConfigItemReq) returns (GetConfigItemResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/apps/{app_id}/config_items/{config_item_id}"
+        };
+    }
+    rpc ListConfigItems(ListConfigItemsReq) returns (ListConfigItemsResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/apps/{app_id}/config_items"
+        };
+    }
+    rpc ListConfigItemCount(ListConfigItemCountReq) returns (ListConfigItemCountResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/config_item_count/biz_id/{biz_id}"
+            body : "*"
+        };
+    }
+
+    rpc UpdateConfigHook(UpdateConfigHookReq) returns (UpdateConfigHookResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/biz/{biz_id}/apps/{app_id}/config_hooks"
+            body : "*"
+        };
+    }
+
+    rpc CreateRelease(CreateReleaseReq) returns (CreateReleaseResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/create/release/release/app_id/{app_id}/biz_id/{biz_id}"
+            body : "*"
+        };
+    }
+    rpc ListReleases(ListReleasesReq) returns (ListReleasesResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/apps/{app_id}/releases"
+        };
+    }
+    rpc GetReleaseByName(GetReleaseByNameReq) returns (pbrelease.Release) {
+        option (google.api.http) = {
+            get: "/api/v1/config/biz/{biz_id}/apps/{app_id}/releases/query/name/{release_name}"
+        };
+    }
+
+    rpc CreateHook(CreateHookReq) returns (CreateHookResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/biz/{biz_id}/hooks"
+            body : "*"
+        };
+    }
+    rpc DeleteHook(DeleteHookReq) returns (DeleteHookResp) {
+        option (google.api.http) = {
+            delete : "/api/v1/config/biz/{biz_id}/hooks/{hook_id}"
+        };
+    }
+    rpc ListHooks(ListHooksReq) returns (ListHooksResp) {
+        option (google.api.http) = {
+            get :  "/api/v1/config/biz/{biz_id}/hooks"
+        };
+    }
+    rpc ListHookTags(ListHookTagsReq) returns (ListHookTagsResp) {
+        option (google.api.http) = {
+            get :  "/api/v1/config/biz/{biz_id}/hook_tags"
+        };
+    }
+    rpc GetHook(GetHookReq) returns (GetHookResp){
+        option (google.api.http) = {
+            get :  "/api/v1/config/biz/{biz_id}/hooks/{hook_id}"
+        };
+    }
+
+    rpc CreateHookRevision(CreateHookRevisionReq) returns (CreateHookRevisionResp){
+        option (google.api.http) = {
+            post : "/api/v1/config/biz/{biz_id}/hooks/{hook_id}/hook_revisions"
+            body : "*"
+        };
+    }
+    rpc ListHookRevisions(ListHookRevisionsReq) returns (ListHookRevisionsResp){
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/hooks/{hook_id}/hook_revisions"
+        };
+    }
+    rpc DeleteHookRevision(DeleteHookRevisionReq) returns (DeleteHookRevisionResp){
+        option (google.api.http) = {
+            delete : "/api/v1/config/biz/{biz_id}/hooks/{hook_id}/hook_revisions/{revision_id}"
+        };
+    }
+    rpc PublishHookRevision(PublishHookRevisionReq) returns (PublishHookRevisionResp){
+        option (google.api.http) = {
+            put : "/api/v1/config/biz/{biz_id}/hooks/{hook_id}/hook_revisions/{revision_id}/publish"
+        };
+    }
+    rpc GetHookRevision(GetHookRevisionReq) returns (pbhr.HookRevision) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/hooks/{hook_id}/hook_revisions/{revision_id}"
+        };
+    }
+    rpc UpdateHookRevision(UpdateHookRevisionReq) returns (UpdateHookRevisionResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/biz/{biz_id}/hooks/{hook_id}/hook_revisions/{revision_id}"
+            body : "*"
+        };
+    }
+    rpc ListHookReferences(ListHookReferencesReq) returns (ListHookReferencesResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/hooks/{hook_id}/references"
+        };
+    }
+    rpc ListHookRevisionReferences(ListHookRevisionReferencesReq) returns (ListHookRevisionReferencesResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/hooks/{hook_id}/hook_revisions/{revision_id}/references"
+        };
+    }
+    rpc GetReleaseHook(GetReleaseHookReq) returns (GetReleaseHookResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/apps/{app_id}/releases/{release_id}/hooks"
+        };
+    }
+
+    rpc CreateTemplateSpace(CreateTemplateSpaceReq) returns (CreateTemplateSpaceResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/biz/{biz_id}/template_spaces"
+            body : "*"
+        };
+    }
+    rpc DeleteTemplateSpace(DeleteTemplateSpaceReq) returns (DeleteTemplateSpaceResp) {
+        option (google.api.http) = {
+            delete : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}"
+        };
+    }
+    rpc UpdateTemplateSpace(UpdateTemplateSpaceReq) returns (UpdateTemplateSpaceResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}"
+            body : "*"
+        };
+    }
+    rpc ListTemplateSpaces(ListTemplateSpacesReq) returns (ListTemplateSpacesResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/template_spaces"
+        };
+    }
+    // GetAllBizsOfTemplateSpaces called only by system itself
+    rpc GetAllBizsOfTemplateSpaces(pbbase.EmptyReq) returns (GetAllBizsOfTemplateSpacesResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/template_spaces/bizs"
+        };
+    }
+    // CreateDefaultTemplateSpace called only by system itself
+    rpc CreateDefaultTemplateSpace(CreateDefaultTemplateSpaceReq) returns (CreateDefaultTemplateSpaceResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/template_spaces/default"
+            body : "*"
+        };
+    }
+
+    rpc CreateTemplate(CreateTemplateReq) returns (CreateTemplateResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/templates"
+            body : "*"
+        };
+    }
+    rpc DeleteTemplate(DeleteTemplateReq) returns (DeleteTemplateResp) {
+        option (google.api.http) = {
+            delete : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/templates/{template_id}"
+        };
+    }
+    rpc UpdateTemplate(UpdateTemplateReq) returns (UpdateTemplateResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/templates/{template_id}"
+            body : "*"
+        };
+    }
+    rpc ListTemplates(ListTemplatesReq) returns (ListTemplatesResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/templates"
+        };
+    }
+
+    rpc CreateTemplateRelease(CreateTemplateReleaseReq) returns (CreateTemplateReleaseResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/templates/{template_id}/template_releases"
+            body : "*"
+        };
+    }
+    rpc ListTemplateReleases(ListTemplateReleasesReq) returns (ListTemplateReleasesResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/templates/{template_id}/template_releases"
+        };
+    }
+    rpc DeleteTemplateRelease(DeleteTemplateReleaseReq) returns (DeleteTemplateReleaseResp) {
+        option (google.api.http) = {
+            delete : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/templates/{template_id}/template_releases/{template_release_id}"
+        };
+    }
+
+    rpc CreateTemplateSet(CreateTemplateSetReq) returns (CreateTemplateSetResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/template_sets"
+            body : "*"
+        };
+    }
+    rpc DeleteTemplateSet(DeleteTemplateSetReq) returns (DeleteTemplateSetResp) {
+        option (google.api.http) = {
+            delete : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/template_sets/{template_set_id}"
+        };
+    }
+    rpc UpdateTemplateSet(UpdateTemplateSetReq) returns (UpdateTemplateSetResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/template_sets/{template_set_id}"
+            body : "*"
+        };
+    }
+    rpc ListTemplateSets(ListTemplateSetsReq) returns (ListTemplateSetsResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/template_spaces/{template_space_id}/template_sets"
+        };
+    }
+
+    rpc CreateGroup(CreateGroupReq) returns (CreateGroupResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/biz/{biz_id}/groups"
+            body : "*"
+        };
+    }
+    rpc DeleteGroup(DeleteGroupReq) returns (DeleteGroupResp) {
+        option (google.api.http) = {
+            delete : "/api/v1/config/biz/{biz_id}/groups/{group_id}"
+        };
+    }
+    rpc UpdateGroup(UpdateGroupReq) returns (UpdateGroupResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/biz/{biz_id}/groups/{group_id}"
+            body : "*"
+        };
+    }
+    rpc ListAllGroups(ListAllGroupsReq) returns (ListAllGroupsResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/groups"
+        };
+    }
+    rpc ListAppGroups(ListAppGroupsReq) returns (ListAppGroupsResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/apps/{app_id}/groups"
+        };
+    }
+    rpc ListGroupReleasedApps(ListGroupReleasedAppsReq) returns (ListGroupReleasedAppsResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz/{biz_id}/groups/{group_id}/released_apps"
+        };
+    }
+    rpc GetGroupByName(GetGroupByNameReq) returns (pbgroup.Group) {
+        option (google.api.http) = {
+            get: "/api/v1/config/biz/{biz_id}/groups/query/name/{group_name}"
+        };
+    }
+
+    rpc Publish(PublishReq) returns (PublishResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/update/strategy/publish/publish/release_id/{release_id}/app_id/{app_id}/biz_id/{biz_id}"
+            body : "*"
+        };
+    }
+
+    rpc GenerateReleaseAndPublish(GenerateReleaseAndPublishReq) returns (PublishResp) {
+        option (google.api.http) = {
+            post: "/api/v1/config/biz/{biz_id}/apps/{app_id}/publish"
+            body: "*"
+        };
+    }
+
+    rpc CreateCredentials(CreateCredentialReq) returns (CreateCredentialResp) {
+        option (google.api.http) = {
+            post : "/api/v1/config/biz_id/{biz_id}/credentials"
+            body : "*"
+        };
+    }
+    rpc ListCredentials(ListCredentialsReq) returns (ListCredentialsResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz_id/{biz_id}/credentials"
+        };
+    }
+    rpc DeleteCredential(DeleteCredentialsReq) returns (DeleteCredentialsResp) {
+        option (google.api.http) = {
+            delete : "/api/v1/config/biz_id/{biz_id}/credential"
+        };
+    }
+    rpc UpdateCredential(UpdateCredentialsReq) returns (UpdateCredentialsResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/biz_id/{biz_id}/credential"
+            body : "*"
+        };
+    }
+
+    rpc ListCredentialScopes(ListCredentialScopesReq) returns (ListCredentialScopesResp) {
+        option (google.api.http) = {
+            get : "/api/v1/config/biz_id/{biz_id}/credential/{credential_id}/scopes"
+        };
+    }
+    rpc UpdateCredentialScope(UpdateCredentialScopeReq) returns (UpdateCredentialScopeResp) {
+        option (google.api.http) = {
+            put : "/api/v1/config/biz_id/{biz_id}/credential/{credential_id}/scope"
+            body : "*"
+        };
+    }
+}
+
+message UpdateCredentialScopeReq {
+    repeated uint32                del_id        = 1;
+    repeated string                add_scope     = 2;
+    uint32                         biz_id        = 3;
+    uint32                         credential_id = 4;
+    repeated pbcrs.UpdateScopeSpec alter_scope   = 5;
+}
+
+message UpdateCredentialScopeResp {}
+
+message ListCredentialScopesReq {
+    uint32 biz_id        = 1;
+    uint32 credential_id = 2;
+}
+
+message ListCredentialScopesResp {
+    uint32                             count   = 1;
+    repeated pbcrs.CredentialScopeList details = 2;
+}
+
+message EnableCredentialsReq {
+    uint32 id     = 1;
+    uint32 biz_id = 2;
+    bool   enable = 3;
+}
+
+message EnableCredentialsResp {}
+
+message DeleteCredentialsReq {
+    uint32 id     = 1;
+    uint32 biz_id = 2;
+}
+
+message DeleteCredentialsResp {}
+message UpdateCredentialsReq {
+    uint32 id     = 1;
+    uint32 biz_id = 2;
+    bool   enable = 3;
+    string memo   = 4;
+}
+
+message UpdateCredentialsResp {}
+
+message ListCredentialsReq {
+    uint32 biz_id    = 1;
+    string searchKey = 2;
+    uint32 start     = 3;
+    uint32 limit     = 4;
+}
+
+message ListCredentialsResp {
+    uint32                               count   = 1;
+    repeated pbcredential.CredentialList details = 2;
+}
+
+message CreateCredentialReq {
+    string          memo   = 1;
+    uint32          biz_id = 2;
+    repeated string scope  = 3;
+}
+
+message CreateCredentialResp {
+    uint32 id = 1;
+}
+
+message CreateAppReq {
+    uint32 biz_id           = 1;
+    string name             = 2;
+    string config_type      = 3; // config_type is enum type, source resource reference: pkg/dal/table/app.go
+    string mode             = 4; // deploy_type is enum type, source resource reference: pkg/dal/table/app.go
+    string memo             = 5;
+    string reload_type      = 6;
+    string reload_file_path = 7;
+}
+
+message CreateAppResp {
+    uint32 id = 1;
+}
+
+message UpdateAppReq {
+    uint32 id               = 1;
+    uint32 biz_id           = 2;
+    string name             = 3;
+    string memo             = 4;
+    string reload_type      = 5;
+    string reload_file_path = 6;
+}
+
+message UpdateAppResp {}
+
+message DeleteAppReq {
+    uint32 id     = 1;
+    uint32 biz_id = 2;
+}
+
+message DeleteAppResp {}
+
+message GetAppReq {
+    uint32 biz_id = 1;
+    uint32 app_id = 2;
+}
+
+message GetAppByNameReq {
+    uint32 biz_id   = 1;
+    string app_name = 2;
+}
+
+message ListAppsRestReq {
+    uint32 biz_id   = 1;
+    uint32 start    = 2;
+    uint32 limit    = 3;
+    string operator = 4;
+    string name     = 5;
+}
+
+message ListAppsBySpaceRestReq {
+    uint32 biz_id   = 1;
+    uint32 start    = 2;
+    uint32 limit    = 3;
+    string operator = 4;
+    string name     = 5;
+}
+
+message ListAppsResp {
+    uint32             count   = 1;
+    repeated pbapp.App details = 2;
+}
+
+message CreateConfigItemReq {
+    uint32 biz_id     = 1;
+    uint32 app_id     = 2;
+    string name       = 3;
+    string path       = 4;
+    string file_type  = 5; // file_type is enum type, source resource reference: pkg/dal/table/config_item.go
+    string file_mode  = 6; // file_mode is enum type, source resource reference: pkg/dal/table/config_item.go
+    string memo       = 7;
+    string user       = 8;
+    string user_group = 9;
+    string privilege  = 10;
+    string sign       = 11;
+    uint64 byte_size  = 12;
+}
+
+message BatchUpsertConfigItemsReq {
+    message ConfigItem {
+        string name       = 1;
+        string path       = 2;
+        string file_type  = 3;  // file_type is enum type, source resource reference: pkg/dal/table/config_item.go
+        string file_mode  = 4;  // file_mode is enum type, source resource reference: pkg/dal/table/config_item.go
+        string memo       = 5;
+        string user       = 6;
+        string user_group = 7;
+        string privilege  = 8;
+        string sign       = 9;
+        uint64 byte_size  = 10;
+    }
+    uint32              biz_id = 1;
+    uint32              app_id = 2;
+    repeated ConfigItem items  = 3;
+}
+
+message BatchUpsertConfigItemsResp {}
+
+message CreateConfigItemResp {
+    uint32 id = 1;
+}
+
+message UpdateConfigItemReq {
+    uint32 id         = 1;
+    uint32 biz_id     = 2;
+    uint32 app_id     = 3;
+    string name       = 4;
+    string path       = 5;
+    string file_type  = 6; // file_type is enum type, source resource reference: pkg/dal/table/config_item.go
+    string file_mode  = 7; // file_mode is enum type, source resource reference: pkg/dal/table/config_item.go
+    string memo       = 8;
+    string user       = 9;
+    string user_group = 10;
+    string privilege  = 11;
+    string sign       = 12;
+    uint64 byte_size  = 13;
+}
+
+message UpdateConfigItemResp {}
+
+message DeleteConfigItemReq {
+    uint32 id     = 1;
+    uint32 biz_id = 2;
+    uint32 app_id = 3;
+}
+
+message DeleteConfigItemResp {}
+
+message GetConfigItemReq {
+    uint32 biz_id         = 1;
+    uint32 config_item_id = 2;
+    uint32 app_id         = 3;
+    uint32 release_id     = 4;
+}
+
+message GetConfigItemResp {
+    pbci.ConfigItem       config_item = 1;
+    pbcontent.ContentSpec content     = 2;
+}
+
+message ListConfigItemsReq {
+    uint32 biz_id     = 1;
+    uint32 app_id     = 2;
+    uint32 release_id = 3;
+    uint32 start      = 4;
+    uint32 limit      = 5;
+    bool   all        = 6;
+    string searchKey  = 7;
+}
+
+message ListConfigItemsResp {
+    uint32                   count   = 1;
+    repeated pbci.ConfigItem details = 2;
+}
+
+message ListConfigItemCountReq {
+    uint32          biz_id = 1;
+    repeated uint32 app_id = 2;
+}
+
+message ListConfigItemCountResp {
+    repeated pbci.ListConfigItemCounts details = 1;
+}
+
+message UpdateConfigHookReq {
+    uint32 biz_id       = 1;
+    uint32 app_id       = 2;
+    uint32 pre_hook_id  = 3;
+    uint32 post_hook_id = 4;
+}
+
+message UpdateConfigHookResp {}
+
+message CreateReleaseReq {
+    uint32 biz_id = 1;
+    uint32 app_id = 2;
+    string name   = 3;
+    string memo   = 4;
+}
+
+message CreateReleaseResp {
+    uint32 id = 1;
+}
+
+message ListReleasesReq {
+    uint32 biz_id     = 1;
+    uint32 app_id     = 2;
+    string searchKey  = 3;
+    uint32 start      = 4;
+    uint32 limit      = 5;
+    bool   all        = 6;
+    bool   deprecated = 7;
+}
+
+message ListReleasesResp {
+    uint32                     count   = 1;
+    repeated pbrelease.Release details = 2;
+}
+
+message GetReleaseByNameReq {
+    uint32 biz_id       = 1;
+    uint32 app_id       = 2;
+    string release_name = 3;
+}
+
+message CreateHookReq {
+    uint32 biz_id        = 1;
+    string name          = 2;
+    string type          = 3;
+    string tag           = 4;
+    string memo          = 5;
+    string content       = 6;
+}
+
+message CreateHookResp {
+    uint32 id = 1;
+}
+
+message DeleteHookReq {
+    uint32 biz_id  = 1;
+    uint32 hook_id = 2;
+    bool   force   = 3;
+}
+
+message DeleteHookResp {}
+
+message ListHooksReq {
+    uint32 biz_id  = 1;
+    string name    = 2;
+    string tag     = 3;
+    bool   all     = 4;
+    bool   not_tag = 5;
+    uint32 start   = 6;
+    uint32 limit   = 7;
+}
+
+message ListHooksResp {
+    message Detail {
+        pbhook.Hook hook                  = 1;
+        uint32      bound_num             = 2;
+        bool        confirm_delete        = 3;
+        uint32      published_revision_id = 4;
+    }
+    uint32          count   = 1;
+    repeated Detail details = 2;
+}
+
+message ListHookTagsReq {
+    uint32 biz_id = 1;
+}
+
+message ListHookTagsResp {
+    repeated pbhook.CountHookTags details = 1;
+}
+
+message CreateHookRevisionReq {
+    uint32 biz_id  = 1;
+    uint32 hook_id = 2;
+    string memo    = 3;
+    string content = 4;
+}
+
+message CreateHookRevisionResp {
+    uint32 id = 1;
+}
+
+message ListHookRevisionsReq {
+    uint32 biz_id     = 1;
+    uint32 hook_id    = 2;
+    string search_key = 3;
+    uint32 start      = 4;
+    uint32 limit      = 5;
+    bool   all        = 6;
+    string state      = 7;
+}
+
+message ListHookRevisionsResp {
+    message ListHookRevisionsData {
+        pbhr.HookRevision hook_revision  = 1;
+        uint32            bound_num      = 2;
+        bool              confirm_delete = 3;
+    }
+    uint32                         count   = 1;
+    repeated ListHookRevisionsData details = 2;
+}
+
+message DeleteHookRevisionReq {
+    uint32 biz_id      = 1;
+    uint32 hook_id     = 2;
+    uint32 revision_id = 3;
+    bool   force       = 4;
+}
+
+message DeleteHookRevisionResp {}
+
+message PublishHookRevisionReq {
+    uint32 biz_id     = 1;
+    uint32 hook_id    = 2;
+    uint32 revision_id = 3;
+}
+
+message PublishHookRevisionResp {}
+
+message GetHookReq {
+    uint32 biz_id  = 1;
+    uint32 hook_id = 2;
+}
+
+message GetHookResp {
+    uint32                id         = 1;
+    GetHookInfoSpec       spec       = 2;
+    pbhook.HookAttachment attachment = 3;
+    pbbase.Revision       revision   = 4;
+}
+
+message GetHookInfoSpec {
+    string   name        = 1;
+    string   type        = 3;
+    string   tag         = 4;
+    string   memo        = 5;
+    message Releases  {
+        uint32 not_release_id = 1;
+    }
+    Releases releases    = 8;
+}
+
+message GetHookRevisionReq {
+    uint32 biz_id     = 1;
+    uint32 hook_id    = 2;
+    uint32 revision_id = 3;
+}
+
+message UpdateHookRevisionReq {
+    uint32 biz_id     = 1;
+    uint32 hook_id    = 2;
+    uint32 revision_id = 3;
+    string name       = 4;
+    string content    = 5;
+    string memo       = 6;
+}
+
+message UpdateHookRevisionResp {}
+
+message ListHookRevisionReferencesReq {
+    uint32 biz_id     = 1;
+    uint32 hook_id    = 2;
+    uint32 revision_id = 3;
+    uint32 start      = 4;
+    uint32 limit      = 5;
+}
+
+message ListHookRevisionReferencesResp {
+    message Detail {
+        uint32 revision_id   = 1;
+        string revision_name = 2;
+        uint32 app_id        = 3;
+        string app_name      = 4;
+        uint32 release_id    = 5;
+        string release_name  = 6;
+        string type          = 7;
+    }
+    uint32          count   = 1;
+    repeated Detail details = 2;
+}
+
+message ListHookReferencesReq {
+    uint32 biz_id     = 1;
+    uint32 hook_id    = 2;
+    uint32 start      = 3;
+    uint32 limit      = 4;
+}
+
+message ListHookReferencesResp {
+    message Detail {
+        uint32 hook_revision_id   = 1;
+        string hook_revision_name = 2;
+        uint32 app_id             = 3;
+        string app_name           = 4;
+        uint32 release_id         = 5;
+        string release_name       = 6;
+        string type               = 7;
+    }
+    uint32          count   = 1;
+    repeated Detail details = 2;
+}
+
+message GetReleaseHookReq {
+    uint32 biz_id     = 1;
+    uint32 app_id     = 2;
+    uint32 release_id = 3;
+}
+
+message GetReleaseHookResp {
+    message Hook {
+        uint32 hook_id                 = 1;
+        string hook_name               = 2;
+        uint32 hook_revision_id        = 3;
+        string hook_revision_name      = 4;
+        string type                    = 5;
+        string content                 = 7;
+    }
+    Hook pre_hook  = 1;
+    Hook post_hook = 2;
+}
+
+message CreateTemplateSpaceReq {
+    uint32 biz_id = 1;
+    string name   = 2;
+    string memo   = 3;
+}
+
+message CreateTemplateSpaceResp {
+    uint32 id = 1;
+}
+
+message UpdateTemplateSpaceReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+    string memo              = 3;
+}
+
+message UpdateTemplateSpaceResp {
+}
+
+message DeleteTemplateSpaceReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+}
+
+message DeleteTemplateSpaceResp {}
+
+message ListTemplateSpacesReq {
+    uint32 biz_id = 1;
+    uint32 start  = 2;
+    uint32 limit  = 3;
+}
+
+message ListTemplateSpacesResp {
+    uint32                      count   = 1;
+    repeated pbts.TemplateSpace details = 2;
+}
+
+message GetAllBizsOfTemplateSpacesResp {
+    repeated uint32 biz_ids = 1;
+}
+
+message CreateDefaultTemplateSpaceReq{
+    uint32 biz_id = 1;
+}
+
+message CreateDefaultTemplateSpaceResp{
+    uint32 id = 1;
+}
+
+message CreateTemplateReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+    string name              = 3;
+    string path              = 4;
+    string memo              = 5;
+    string release_name      = 6;
+    string release_memo      = 7;
+    string file_type         = 8; // file_type is enum type
+    string file_mode         = 9; // file_mode is enum type
+    string user              = 10;
+    string user_group        = 11;
+    string privilege         = 12;
+    string sign              = 13;
+    uint64 byte_size         = 14;
+}
+
+message CreateTemplateResp {
+    uint32 id = 1;
+}
+
+message UpdateTemplateReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+    uint32 template_id       = 3;
+    string memo              = 4;
+}
+
+message UpdateTemplateResp {
+}
+
+message DeleteTemplateReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+    uint32 template_id       = 3;
+}
+
+message DeleteTemplateResp {}
+
+message ListTemplatesReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+    uint32 start             = 3;
+    uint32 limit             = 4;
+}
+
+message ListTemplatesResp {
+    uint32                       count   = 1;
+    repeated pbtemplate.Template details = 2;
+}
+
+message CreateTemplateReleaseReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+    uint32 template_id       = 3;
+    string release_name      = 4;
+    string release_memo      = 5;
+    string name              = 6;
+    string path              = 7;
+    string file_type         = 8; // file_type is enum type
+    string file_mode         = 9; // file_mode is enum type
+    string user              = 10;
+    string user_group        = 11;
+    string privilege         = 12;
+    string sign              = 13;
+    uint64 byte_size         = 14;
+}
+
+message CreateTemplateReleaseResp {
+    uint32 id = 1;
+}
+
+message ListTemplateReleasesReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+    uint32 template_id       = 3;
+    uint32 start             = 4;
+    uint32 limit             = 5;
+}
+
+message ListTemplateReleasesResp {
+    uint32                        count   = 1;
+    repeated pbtr.TemplateRelease details = 2;
+}
+
+message DeleteTemplateReleaseReq {
+    uint32 biz_id              = 1;
+    uint32 template_space_id   = 2;
+    uint32 template_id         = 3;
+    uint32 template_release_id = 4;
+}
+
+message DeleteTemplateReleaseResp {}
+
+message CreateGroupReq {
+    uint32                 biz_id    = 1;
+    string                 name      = 2;
+    bool                   public    = 3;
+    repeated uint32        bind_apps = 4;
+    string                 mode      = 5;
+    google.protobuf.Struct selector  = 6;
+    string                 uid       = 7;
+}
+
+message CreateTemplateSetReq {
+    uint32          biz_id            = 1;
+    uint32          template_space_id = 2;
+    string          name              = 3;
+    string          memo              = 4;
+    repeated uint32 template_ids      = 5;
+    bool            public            = 6;
+    repeated uint32 bound_apps        = 7;
+}
+
+message CreateTemplateSetResp {
+    uint32 id = 1;
+}
+
+message UpdateTemplateSetReq {
+    uint32          biz_id            = 1;
+    uint32          template_space_id = 2;
+    uint32          template_set_id   = 3;
+    string          memo              = 4;
+    repeated uint32 template_ids      = 5;
+    bool            public            = 6;
+    repeated uint32 bound_apps        = 7;
+}
+
+message UpdateTemplateSetResp {
+}
+
+message DeleteTemplateSetReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+    uint32 template_set_id   = 3;
+}
+
+message DeleteTemplateSetResp {}
+
+message ListTemplateSetsReq {
+    uint32 biz_id            = 1;
+    uint32 template_space_id = 2;
+    uint32 start             = 3;
+    uint32 limit             = 4;
+}
+
+message ListTemplateSetsResp {
+    uint32                      count   = 1;
+    repeated pbtset.TemplateSet details = 2;
+}
+
+message CreateGroupResp {
+    uint32 id = 1;
+}
+
+message UpdateGroupReq {
+    uint32                 biz_id    = 1;
+    uint32                 group_id  = 2;
+    string                 name      = 3;
+    bool                   public    = 4;
+    repeated uint32        bind_apps = 5;
+    string                 mode      = 6;
+    google.protobuf.Struct selector  = 7;
+    string                 uid       = 8;
+}
+
+message UpdateGroupResp {}
+
+message DeleteGroupReq {
+    uint32 biz_id   = 1;
+    uint32 group_id = 2;
+}
+
+message DeleteGroupResp {}
+
+message ListAllGroupsReq {
+    uint32 biz_id = 1;
+}
+
+message ListAllGroupsResp {
+    message ListAllGroupsData {
+        message BindApp {
+            uint32 id   = 1;
+            string name = 2;
+        }
+        uint32                 id                = 1;
+        string                 name              = 2;
+        bool                   public            = 3;
+        repeated BindApp       bind_apps         = 4;
+        google.protobuf.Struct selector          = 5;
+        uint32                 released_apps_num = 6;
+        bool                   edited            = 7;
+    }
+    repeated ListAllGroupsData details = 1;
+}
+
+message ListAppGroupsReq {
+    uint32 biz_id = 1;
+    uint32 app_id = 2;
+}
+
+message ListAppGroupsResp {
+    message ListAppGroupsData {
+        uint32                 group_id     = 1;
+        string                 group_name   = 2;
+        uint32                 release_id   = 3;
+        string                 release_name = 4;
+        google.protobuf.Struct old_selector = 5;
+        google.protobuf.Struct new_selector = 6;
+        bool                   edited       = 7;
+    }
+    repeated ListAppGroupsData details = 1;
+}
+
+message ListGroupReleasedAppsReq {
+    uint32 biz_id   = 1;
+    uint32 group_id = 2;
+    uint32 start    = 3;
+    uint32 limit    = 4;
+}
+
+message ListGroupReleasedAppsResp {
+    message ListGroupReleasedAppsData {
+        uint32 app_id       = 1;
+        string app_name     = 2;
+        uint32 release_id   = 3;
+        string release_name = 4;
+        bool   edited       = 5;
+    }
+    uint32                             count   = 1;
+    repeated ListGroupReleasedAppsData details = 2;
+}
+
+message GetGroupByNameReq {
+    uint32 biz_id   = 1;
+    string group_name = 2;
+}
+
+message PublishReq {
+    uint32          biz_id     = 1;
+    uint32          app_id     = 2;
+    uint32          release_id = 3;
+    string          memo       = 4;
+    bool            all        = 5;
+    bool            default    = 6;
+    repeated uint32 groups     = 7;
+}
+
+message GenerateReleaseAndPublishReq {
+    uint32          biz_id       = 1;
+    uint32          app_id       = 2;
+    string          release_name = 3;
+    string          release_memo = 4;
+    bool            all          = 5;
+    repeated string groups       = 6;
+}
+
+message GenerateReleaseAndPublishResp {
+    uint32 id = 1;
+}
+
+message PublishResp {
+    uint32 id = 1;
+}

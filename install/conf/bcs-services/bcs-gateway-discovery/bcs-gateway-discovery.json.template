@@ -1,0 +1,35 @@
+{
+  "bcs_zookeeper": "${bcsZkHost}",
+  "log_dir": "${log_dir}",
+  "pid_dir": "${pid_dir}",
+  "v": ${verbosity},
+  "alsologtostderr": ${alsologtostderr},
+  "ca_file": "${caFile}",
+  "server_cert_file": "${serverCertFile}",
+  "server_key_file": "${serverKeyFile}",
+  "client_cert_file": "${clientCertFile}",
+  "client_key_file": "${clientKeyFile}",
+  "local_ip": "${localIp}",
+  "address": "${localIp}",
+  "admin_type": "${adminType}",
+  "amdin_token": "${adminToken}",
+  "admin_api": "${adminAPI}",
+  "auth_token": "${gatewayToken}",
+  "gateway_metrics_enabled": ${gatewayMetricsEnabled},
+  "modules": "${zkModules}",
+  "redis": {
+    "redis_host": "${redisHost}",
+    "redis_port": ${redisPort},
+    "redis_password": "${redisPassword}",
+    "redis_database": ${redisDatabase}
+  },
+  "etcdRegistry": {
+    "etcd_feature": true,
+    "etcd_address": "${bcsEtcdHost}",
+    "etcd_grpc_modules": "${etcdGrpcModules}",
+    "etcd_http_modules": "${etcdHttpModules}",
+    "etcd_ca": "${bcsEtcdCAFile}",
+    "etcd_cert": "${bcsEtcdCertFile}",
+    "etcd_key": "${bcsEtcdKeyFile}"
+  }
+}

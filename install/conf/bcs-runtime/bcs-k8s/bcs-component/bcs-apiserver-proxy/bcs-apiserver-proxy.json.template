@@ -1,0 +1,27 @@
+{
+    "address": "${localIp}",
+    "port": ${bcsApiserverProxyPort},
+    "pid_dir": "${pid_dir}",
+    "log_dir": "${log_dir}",
+    "alsologtostderr": ${alsotostderr},
+    "v": ${log_level},
+    "debugMode": ${bcsApiserverProxyDebug},
+    "proxyLvs": {
+        "virtualAddress": "${virtualAddress}",
+        "lvsScheduler": "${lvsScheduler}"
+    },
+    "persistConfig": {
+        "ipvsPersistDir": "${ipvsPersistDir}"
+    },
+    "healthCheck": {
+        "healthScheme": "${healthScheme}",
+        "healthPath": "${healthPath}"
+    },
+    "k8sConfig": {
+        "master": "${kubeMaster}",
+        "kubeConfig": "${kubeConfig}"
+    },
+    "systemInterval": {
+        "managerInterval": ${managerInterval}
+    }
+}

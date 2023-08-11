@@ -1,0 +1,47 @@
+{
+    "default": {
+        "clusterID": "${clusterId}",
+        "hostIP": "${localIp}"
+    },
+     "watch_resource": {
+        "namespace": "${watchNamespace}",
+        "disable_netservice": ${watchDisableNetService},
+        "disable_crd": ${watchDisableCrd},
+        "label_selectors": ${watchLabelSelectors}
+    },
+    "bcs": {
+        "zk": "${bcsZkHost}",
+        "tls": {
+            "ca-file": "${caFile}",
+            "cert-file": "${clientCertFile}",
+            "key-file": "${clientKeyFile}",
+            "password": "${clientKeyPassword}"
+        },
+        "is-external": ${kubeWatchExternal},
+        "netservice-zookeepers": "${customNetServiceZK}",
+        "custom-storage-endpoints": "${customStorage}",
+        "custom-netservice-endpoints": "${customNetService}",
+        "writerQueueLen": ${writerQueueLen},
+        "podQueueNum": ${podQueueNum}
+    },
+    "k8s": {
+        "kubeconfig": "${kubeconfig}",
+        "master": "${kubeMaster}",
+        "tls": {
+            "ca-file": "",
+            "cert-file": "",
+            "key-file": ""
+        }
+    },
+    "address": "${localIp}",
+    "port": ${bcsK8sWatchPort},
+    "metric_port": ${bcsK8sWatchMetricPort},
+    "ca_file": "${caFile}",
+    "server_cert_file": "${serverCertFile}",
+    "server_key_file": "${serverKeyFile}",
+    "debug_mode": ${bcsK8sWatchDebug},
+    "log_dir": "${log_dir}",
+    "alsologtostderr": ${alsotostderr},
+    "v": ${log_level},
+    "filterConfigPath": "/data/bcs/bcs-k8s-watch/filter.json"
+}

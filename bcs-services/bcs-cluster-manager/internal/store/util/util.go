@@ -1,0 +1,203 @@
+/*
+ * Tencent is pleased to support the open source community by making Blueking Container Service available.
+ * Copyright (C) 2019 THL A29 Limited, a Tencent company. All rights reserved.
+ * Licensed under the MIT License (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * http://opensource.org/licenses/MIT
+ * Unless required by applicable law or agreed to in writing, software distributed under,
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package util
+
+import (
+	"context"
+	"github.com/Tencent/bk-bcs/bcs-common/pkg/odm/operator"
+	"go.mongodb.org/mongo-driver/bson"
+
+	"github.com/Tencent/bk-bcs/bcs-common/pkg/odm/drivers"
+)
+
+const (
+	// DataTableNamePrefix is prefix of data table name
+	DataTableNamePrefix = "bcsclustermanagerv2_"
+
+	// DefaultLimit table default limit
+	DefaultLimit = 3000
+)
+
+// EnsureTable ensure object database table and table indexes
+func EnsureTable(ctx context.Context, db drivers.DB, tableName string, indexes []drivers.Index) error {
+	hasTable, err := db.HasTable(ctx, tableName)
+	if err != nil {
+		return err
+	}
+	if !hasTable {
+		tErr := db.CreateTable(ctx, tableName)
+		if tErr != nil {
+			return tErr
+		}
+	}
+	// only ensure index when index name is not empty
+	for _, idx := range indexes {
+		hasIndex, iErr := db.Table(tableName).HasIndex(ctx, idx.Name)
+		if iErr != nil {
+			return iErr
+		}
+		if !hasIndex {
+			if iErr = db.Table(tableName).CreateIndex(ctx, idx); iErr != nil {
+				return iErr
+			}
+		}
+	}
+	return nil
+}
+
+// MapInt2MapIf convert map[string]int to map[string]interface{}
+func MapInt2MapIf(m map[string]int) map[string]interface{} {
+	newM := make(map[string]interface{})
+	for k, v := range m {
+		newM[k] = v
+	}
+	return newM
+}
+
+const (
+	Regex = "regex"
+)
+
+// Condition xxx
+func Condition(ope operator.Operator, src, dst string) bson.E {
+	switch ope {
+	case operator.Eq:
+		return bson.E{
+			Key: src,
+			Value: bson.M{
+				"$eq": dst,
+			},
+		}
+	case operator.Ne:
+		return bson.E{
+			Key: src,
+			Value: bson.M{
+				"$ne": dst,
+			},
+		}
+	case Regex:
+		return bson.E{
+			Key: src,
+			Value: bson.M{
+				"$regex": dst,
+			},
+		}
+	case operator.Lte:
+		return bson.E{
+			Key: src,
+			Value: bson.M{
+				"$lte": dst,
+			},
+		}
+	case operator.Gte:
+		return bson.E{
+			Key: src,
+			Value: bson.M{
+				"$gte": dst,
+			},
+		}
+	}
+
+	return bson.E{}
+}
+
+// UnionTable body
+type UnionTable struct {
+	DstTable   string
+	FromFields string
+	DstFields  string
+	AsField    string
+}
+
+// BuildLookUpCond build lookUp cond
+func BuildLookUpCond(t UnionTable) map[string]interface{} {
+	return map[string]interface{}{
+		"$lookup": BuildLookUpValue(t),
+	}
+}
+
+// BuildLookUpValue build lookup value
+func BuildLookUpValue(table UnionTable) map[string]interface{} {
+	return map[string]interface{}{
+		"from":         table.DstTable,
+		"localField":   table.FromFields,
+		"foreignField": table.DstFields,
+		"as":           table.AsField,
+	}
+}
+
+// BuildUnWindCond build unWind cond
+func BuildUnWindCond(asField string) map[string]interface{} {
+	return map[string]interface{}{
+		"$unwind": map[string]interface{}{
+			"path":                       "$" + asField,
+			"preserveNullAndEmptyArrays": true,
+		},
+	}
+}
+
+// BuildMatchExprCond build match/expr cond
+func BuildMatchExprCond(cond interface{}) map[string]interface{} {
+	return map[string]interface{}{
+		"$match": map[string]interface{}{
+			"expr": cond,
+		},
+	}
+}
+
+// BuildMatchCond build match cond
+func BuildMatchCond(cond map[string]interface{}) map[string]interface{} {
+	return map[string]interface{}{
+		"$match": cond,
+	}
+}
+
+// TransBsonEToMap trans to map interface
+func TransBsonEToMap(condE []bson.E) map[string]interface{} {
+	condM := make(map[string]interface{}, 0)
+	for i := range condE {
+		condM[condE[i].Key] = condE[i].Value
+	}
+
+	return condM
+}
+
+// BuildAndManyConds and conditions
+func BuildAndManyConds(conds []bson.E) map[string]interface{} {
+	return map[string]interface{}{
+		"$and": bson.D(conds),
+	}
+}
+
+// BuildProjectOutput build union table output
+func BuildProjectOutput(project interface{}) map[string]interface{} {
+	return map[string]interface{}{
+		"$project": project,
+	}
+}
+
+// BuildTaskOperationLogProject build task operation log
+func BuildTaskOperationLogProject() map[string]interface{} {
+	return map[string]interface{}{
+		"resourcetype": "$resourcetype",
+		"resourceid":   "$resourceid",
+		"taskid":       "$taskid",
+		"message":      "$message",
+		"opuser":       "$opuser",
+		"createtime":   "$createtime",
+		"tasktype":     "$task.tasktype",
+		"status":       "$task.status",
+		"clusterid":    "$clusterid",
+		"projectid":    "$projectid",
+	}
+}

@@ -1,0 +1,48 @@
+
+
+/* 存放常用变量 */
+
+/* 相对较浅，常用于容器边框色 */
+$border-color: #ebf0f5;
+/* 相对较深，常用于输入框边框色 */
+$border-weight-color: #dde4eb;
+$border-weight-color-aaa: red;
+
+/* 边框色 */
+$borderColor: #ebf0f5; /* 相对较浅，常用于容器边框色 */
+$borderWeightColor: #dfe0e5; /* 相对较深，常用于输入框边框色 */
+
+/* 字体色 */
+$fontColor: #63656e;
+$fontWeightColor: #63656e;
+
+/* 主体 icon 颜色 */
+$iconPrimaryColor: #3a84ff;
+$primaryColor: #3a84ff;
+
+/* 成功 icon 颜色 */
+$iconSuccessColor: #2dcb56;
+$successColor: #2dcb56;
+
+/* 失败 icon 颜色 */
+$iconFailColor: #ea3636;
+$failColor: #ea3636;
+$dangerColor: #ea3636;
+
+/* warning icon 颜色 */
+$iconWarningColor: #ff9c01;
+$warningColor: #ff9c01;
+
+/* 淡色 */
+$primaryLightColor: #ebf4ff;
+
+/* 适配宽度 */
+$mediaWidth: 1440px;
+$mediaMidWidth: 1600px;
+
+/* 背景 hover */
+$bgHoverColor: #fafbfd;
+
+$borderLightColor: #e6e6e6;
+
+$fnMinorColor: #c3cdd7;

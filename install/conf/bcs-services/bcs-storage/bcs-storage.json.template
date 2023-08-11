@@ -1,0 +1,42 @@
+{
+  "address": "${localIp}",
+  "ipv6_address": "${localIpv6}",
+  "port": ${bcsStoragePort},
+  "metric_port": ${bcsStorageMetricPort},
+  "log_dir": "${log_dir}",
+  "v": "${verbosity}",
+  "alsologtostderr": ${alsologtostderr},
+  "pid_dir": "${pid_dir}",
+  "bcs_zookeeper": "${bcsZkHost}",
+  "database_config_file": "${storageDbConfig}",
+  "queue_config_file": "${queueConfig}",
+  "event_max_day": ${eventMaxDay},
+  "event_max_cap": ${eventMaxCap},
+  "event_clean_time_range_min": ${eventCleanTimeRangeMin},
+  "alarm_max_day": ${alarmMaxDay},
+  "alarm_max_cap": ${alarmMaxCap},
+  "ca_file": "${caFile}",
+  "server_cert_file": "${serverCertFile}",
+  "server_key_file": "${serverKeyFile}",
+  "client_cert_file": "${clientCertFile}",
+  "client_key_file": "${clientKeyFile}",
+  "etcdRegistry": {
+    "etcd_feature": ${bcsEtcdFeature},
+    "etcd_address": "${bcsEtcdHost}",
+    "etcd_ca": "${bcsEtcdCAFile}",
+    "etcd_cert": "${bcsEtcdCertFile}",
+    "etcd_key": "${bcsEtcdKeyFile}"
+  },
+  "tracing": {
+    "tracingSwitch": "${bcsTracingSwitch}",
+    "tracingType": "${bcsTracingType}",
+    "serviceName": "${bcsServiceName}",
+    "rPCMetrics": ${bcsRPCMetrics},
+    "reportMetrics": ${bcsReportMetrics},
+    "reportLog": ${bcsReportLog},
+    "agentFromEnv": ${bcsAgentFromEnv},
+    "agentHostPort": "${bcsAgentHostPort}",
+    "sampleType": "${bcsSampleType}",
+    "sampleParameter": ${bcsSampleParameter}
+    }
+}

@@ -1,0 +1,28 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cronjob-test
+  namespace: default
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "250m"
+              limits:
+                memory: "128Mi"
+                cpu: "250m"
+          restartPolicy: OnFailure

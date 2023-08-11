@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" href="<%= process.env.BK_STATIC_URL %>/static/images/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="<%= process.env.BK_STATIC_URL %>/static/images/favicon.ico" type="image/x-icon" />
+        <meta charset="utf-8">
+        <title> loading </title>
+    </head>
+<body>
+<div id="app"></div>
+<script>
+    var LOGIN_FULL = '<%= process.env.BK_LOGIN_FULL %>'
+    var DEVOPS_HOST = '<%= process.env.BK_DEVOPS_HOST %>'
+    var DEVOPS_BCS_API_URL = '<%= process.env.BK_DEVOPS_BCS_API_URL %>'
+    var BK_STATIC_URL = '<%= process.env.BK_STATIC_URL %>'
+    var RUN_ENV = '<%= process.env.BK_RUN_ENV %>'
+    var DEVOPS_ARTIFACTORY_HOST = '<%= process.env.BK_DEVOPS_ARTIFACTORY_HOST %>'
+    var REGION = '<%= process.env.BK_REGION %>'
+    var SITE_URL = '<%= process.env.BK_SITE_URL %>'
+    var BK_IAM_HOST = '<%= process.env.BK_IAM_HOST %>'
+    var PROJECT_K8S = 'k8s'
+    var PROJECT_TKE = 3
+    var PAAS_HOST = '<%= process.env.BK_PAAS_HOST %>'
+    var BKMONITOR_HOST = '<%= process.env.BK_BKMONITOR_HOST %>'
+    var BCS_API_HOST = '<%= process.env.BK_BCS_API_HOST %>'
+    var PREFERRED_DOMAINS = '<%= process.env.BK_PREFERRED_DOMAINS %>'
+    var BK_CC_HOST = '<%= process.env.BK_CC_HOST %>'
+    var BK_SRE_HOST = '<%= process.env.BK_SRE_HOST %>'
+
+    // 加载配置文件
+    window.BCS_CONFIG = JSON.parse('<%= process.env.BK_BCS_CONFIG %>')
+</script>
+<script charset="utf-8">
+    function loadMonitorScript() {
+        if (!window.BCS_CONFIG.BK_UI_MONITOR_URL) return
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = window.BCS_CONFIG.BK_UI_MONITOR_URL;
+        document.body.appendChild(script);
+        script.onload = function() {
+            emonitor.create({
+                name: 'bk_bcs',
+                atta: {
+                name: 'bk_bcs',
+                },
+                mode: '007',
+                cgi: {
+                sampling: 1,
+                code: ['ret'],
+                msg: ['info', 'result']
+                },
+                // onBeforeSend: function(data) {
+                //   console.log('onBeforeSend::', data);
+                // },
+                // onload: function() {
+                //   if (!emonitor.getUrlParam({
+                //     name: 'debug'
+                //   })) {
+                //     setTimeout(function() {
+                //     window.location.reload();
+                //   }, 10000);
+                //   }
+                // },
+                // onCustom: function(data) {
+                //   console.warn('onCustom', data);
+                // },
+            });
+        }
+    }
+    loadMonitorScript()
+</script>
+</body>
+</html>

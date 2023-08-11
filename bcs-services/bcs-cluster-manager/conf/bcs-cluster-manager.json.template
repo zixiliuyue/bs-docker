@@ -1,0 +1,183 @@
+{
+    "mongo": {
+        "address": "${bcsClusterManagerMongoAddress}",
+        "connecttimeout": ${bcsClusterManagerMongoConnectTimeout},
+        "database": "${bcsClusterManagerMongoDatabase}",
+        "username": "${bcsClusterManagerMongoUsername}",
+        "password": "${bcsClusterManagerMongoPassword}",
+        "maxpoolsize": ${bcsClusterManagerMongoMaxPoolSize},
+        "minpoolsize": ${bcsClusterManagerMongoMinPoolSize}
+    },
+    "etcd": {
+        "endpoints": "${bcsEtcdHost}",
+        "cert": "${bcsEtcdCertFile}",
+        "key": "${bcsEtcdKeyFile}",
+        "ca": "${bcsEtcdCAFile}"
+    },
+    "swagger": {
+        "dir": "${bcsClusterManagerSwaggerDir}"
+    },
+    "tunnel": {
+        "peertoken": "${bcsClusterManagerPeerToken}"
+    },
+    "bcslog": {
+        "dir": "${log_dir}",
+        "alsotostderr": ${bcsClusterManagerAlsoToStdErr},
+        "v": ${bcsClusterManagerVerbosity}
+    },
+    "broker": {
+        "address": "${queueAddress}",
+        "exchange": "${exchange}"
+    },
+    "bkOps": {
+        "server": "${bcsSopsServer}",
+        "appCode": "${bcsAppCode}",
+        "appSecret": "${bcsAppSecret}",
+        "debug": ${debug},
+        "bkUserName": "${bcsBkUserName}",
+        "templateURL": "${bcsSopsTemplateURL}",
+        "frontURL": "${bcsSopsFrontURL}"
+    },
+    "cmdb": {
+        "enable": ${bcsCmdbEnable},
+        "appCode": "${bcsAppCode}",
+        "appSecret": "${bcsAppSecret}",
+        "bkUserName": "${bcsBkUserName}",
+        "server": "${bcsCmdbServer}",
+        "debug": ${bcsCmdbDebug}
+    },
+    "resource": {
+        "enable": ${bcsResourceManagerEnable},
+        "module": "${bcsResourceManagerModule}"
+    },
+    "cidr": {
+        "enable": ${bcsCidrManagerEnable},
+        "module": "${bcsCidrManagerModule}",
+        "tls": ${bcsCidrManagerTls}
+    },
+    "access": {
+        "server": "${bcsAuthServer}",
+        "debug": ${bcsAuthDebug}
+    },
+    "passcc": {
+        "server": "${bcsPassServer}",
+        "appCode": "${bcsAppCode}",
+        "appSecret": "${bcsAppSecret}",
+        "enable": ${bcsPassEnable},
+        "debug": ${bcsPassDebug}
+    },
+    "alarm": {
+        "server": "${bcsAlarmServer}",
+        "monitorServer": "${bcsMonitorServer}",
+        "appCode": "${bcsAppCode}",
+        "appSecret": "${bcsAppSecret}",
+        "bkUserName": "${bcsBkUserName}",
+        "enable": ${bcsAlarmEnable},
+        "debug": ${bcsAlarmDebug}
+    },
+    "iam_config": {
+        "systemID": "${bcsIAMSystemID}",
+        "appCode": "${bcsIAMAppCode}",
+        "appSecret": "${bcsIAMAppSecret}",
+        "external": ${bcsIAMExternal},
+        "gateWayServer": "${bcsIAMGateWayHost}",
+        "iamServer": "${bcsIAMHost}",
+        "bkiIamServer": "${bcsIAMbkiHost}",
+        "metric": ${bcsIAMMetric},
+        "debug": ${bcsIAMDebug},
+        "applyPermAddress": "${bcsIAMApplyPermAddress}"
+    },
+    "bcsapp": {
+        "server": "${bcsAppServer}",
+        "appCode": "${bcsAppAppCode}",
+        "appSecret": "${bcsAppAppSecret}",
+        "bkUserName": "${bcsAppBkUsername}",
+        "enable": ${bcsAppEnable},
+        "debug": ${bcsAppDebug}
+    },
+    "helm": {
+        "module": "${bcsHelmManagerModule}",
+        "enable": ${bcsHelmManagerEnable}
+    },
+    "componentDeploy": {
+        "autoScaler": {
+            "chartName": "${bcsCAChartName}",
+            "releaseName": "${bcsCAReleaseName}",
+            "releaseNamespace": "${bcsCAReleaseNamespace}",
+            "isPublicRepo": ${bcsCAIsPublicRepo}
+        },
+        "watch": {
+            "chartName": "${bcsWatchChartName}",
+            "releaseName": "${bcsWatchReleaseName}",
+            "releaseNamespace": "${bcsWatchReleaseNamespace}",
+            "isPublicRepo": ${bcsWatchIsPublicRepo},
+            "storageServer": "${bcsStorageServer}"
+        },
+        "vcluster": {
+            "httpServer": "${bcsHttpServer}",
+            "wsServer": "${bcsWsServer}",
+            "debugWsServer": "${bcsDebugWsServer}",
+            "chartName": "${bcsVclusterChartName}",
+            "releaseName": "${bcsVclusterReleaseName}",
+            "isPublicRepo": ${bcsVclusterIsPublicRepo}
+        },
+        "registry": "${bcsImageRegistry}",
+        "bcsApiGateway": "${bcsCAApiGateway}",
+        "token": "${bcsCAToken}",
+        "deployService": "${deployService}"
+    },
+    "user": {
+        "enable": ${bcsUserEnable},
+        "gateWay": "${bcsUserGateWay}",
+        "isVerifyTLS": ${bcsUserVerifyTLS},
+        "token": "${bcsUserToken}"
+    },
+    "auth": {
+        "enable": ${bcsAuthEnable},
+        "publicKeyFile": "${bcsAuthPublicKeyFile}",
+        "privateKeyFile": "${bcsAuthPrivateKeyFile}",
+        "clientPermissions": "${bcsAuthClientPermissions}",
+        "noAuthMethod": "${bcsAuthNoAuthMethod}"
+    },
+    "gse": {
+        "enable": ${bcsGseEnable},
+        "appCode": "${bcsAppCode}",
+        "appSecret": "${bcsAppSecret}",
+        "bkUserName": "${bcsBkUserName}",
+        "server": "${bcsGseServer}",
+        "debug": ${bcsGseDebug}
+    },
+    "job": {
+        "appCode": "${bcsAppCode}",
+        "appSecret": "${bcsAppSecret}",
+        "bkUserName": "${bcsBkUserName}",
+        "server": "${bcsJobServer}",
+        "debug": ${bcsJobDebug},
+        "jobTaskLink": "${bcsJobTaskLink}"
+    },
+    "nodeman": {
+        "enable": ${bcsNodeManEnable},
+        "appCode": "${bcsAppCode}",
+        "appSecret": "${bcsAppSecret}",
+        "bkUserName": "${bcsBkUserName}",
+        "server": "${bcsNodeManServer}",
+        "debug": ${bcsNodeManDebug}
+    },
+    "tagDepart": "${tagDepart}",
+    "prefixVcluster": "${prefixVcluster}",
+    "version": "${bcsClusterManagerVersion}",
+    "cloudTemplatePath": "${bcsCloudTemplatePath}",
+    "resourceSchemaPath": "${bcsResourceSchemaPath}",
+    "debug": ${bcsClusterManagerDebug},
+    "address": "${localIp}",
+    "ipv6Address": "${localIpv6}",
+    "port": ${bcsClusterManagerPort},
+    "httpport": ${bcsClusterManagerHTTPPort},
+    "metricport": ${bcsClusterManagerMetricPort},
+    "serverca": "${caFile}",
+    "servercert": "${serverCertFile}",
+    "serverkey": "${serverKeyFile}",
+    "clientca": "${caFile}",
+    "clientcert": "${clientCertFile}",
+    "clientkey": "${clientKeyFile}"
+}
